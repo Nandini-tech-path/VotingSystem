@@ -180,3 +180,4 @@ C:\Users\silve\OneDrive\Desktop\nandini\votingsystem\VotingSystem.Web\obj\Releas
 C:\Users\silve\OneDrive\Desktop\nandini\votingsystem\VotingSystem.Web\obj\Release\net8.0\VotingSystem.Web.pdb
 C:\Users\silve\OneDrive\Desktop\nandini\votingsystem\VotingSystem.Web\obj\Release\net8.0\VotingSystem.Web.genruntimeconfig.cache
 C:\Users\silve\OneDrive\Desktop\nandini\votingsystem\VotingSystem.Web\obj\Release\net8.0\ref\VotingSystem.Web.dll
+C:\Users\silve\OneDrive\Desktop\nandini\votingsystem\VotingSystem.Web\obj\Release\net8.0\VotingSystem.Web.sourcelink.json
