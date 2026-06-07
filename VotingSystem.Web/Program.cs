@@ -105,9 +105,17 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var db = services.GetRequiredService<VotingDbContext>();
-        logger.LogInformation("Attempting to apply database migrations...");
-        db.Database.Migrate();
-        logger.LogInformation("Database migrations applied successfully.");
+        if (app.Environment.IsDevelopment())
+        {
+            logger.LogInformation("Attempting to apply SQLite database migrations...");
+            db.Database.Migrate();
+        }
+        else
+        {
+            logger.LogInformation("Attempting to create SQL Server database schema directly...");
+            db.Database.EnsureCreated();
+        }
+        logger.LogInformation("Database setup completed successfully.");
     }
     catch (Exception ex)
     {
