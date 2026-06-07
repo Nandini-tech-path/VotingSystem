@@ -14,9 +14,18 @@ var isDevelopment = builder.Environment.IsDevelopment();
 var defaultConn = builder.Configuration.GetConnectionString("DefaultConnection");
 var azureConn = builder.Configuration.GetConnectionString("AzureSqlConnection");
 // If the default connection explicitly points to a local SQLite file, prefer it regardless of environment.
-var connectionToUse = (!string.IsNullOrEmpty(defaultConn) && defaultConn.TrimStart().StartsWith("Data Source=", StringComparison.OrdinalIgnoreCase))
-    ? defaultConn
-    : (isDevelopment ? defaultConn : (string.IsNullOrEmpty(azureConn) ? defaultConn : azureConn));
+string connectionToUse;
+
+if (builder.Environment.IsDevelopment())
+{
+    connectionToUse = defaultConn;
+}
+else
+{
+    connectionToUse = !string.IsNullOrEmpty(azureConn)
+        ? azureConn
+        : defaultConn;
+}
 builder.Services.AddDbContext<VotingDbContext>(options =>
 {
     if (!string.IsNullOrEmpty(connectionToUse) && connectionToUse.TrimStart().StartsWith("Data Source=", StringComparison.OrdinalIgnoreCase))
