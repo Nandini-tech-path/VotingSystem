@@ -1,0 +1,116 @@
+@model VotingSystem.Web.ViewModels.ElectionResultsViewModel
+@{
+    ViewData["Title"] = "Election Results";
+    Layout = "_Layout.Admin";
+    var totalVotes = Model.CandidateVoteCounts.Sum(c => c.VoteCount);
+}
+<div class="row gy-4">
+    <div class="col-lg-4">
+        <div class="stat-card p-4">
+            <h5 class="mb-3">Winner</h5>
+            @if (Model.Winner != null)
+            {
+                <div class="fw-bold fs-4">@Model.Winner.CandidateName</div>
+                <p class="text-muted mb-0">Leading candidate</p>
+            }
+            else
+            {
+                <div class="text-muted">No winner available yet.</div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="stat-card p-4">
+            <h5 class="mb-3">Total Votes</h5>
+            <div class="h2">@totalVotes</div>
+            <p class="text-muted mb-0">Total recorded ballots.</p>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="stat-card p-4">
+            <h5 class="mb-3">Top Vote Share</h5>
+            @if (Model.Winner != null && totalVotes > 0)
+            {
+                <div class="h2">@Math.Round((double)Model.Winner.VoteCount / totalVotes * 100, 1)%</div>
+                <p class="text-muted mb-0">Percentage of total votes.</p>
+            }
+            else
+            {
+                <div class="text-muted">Not enough votes yet.</div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row gy-4 mt-4">
+    <div class="col-xl-7">
+        <div class="card-modern p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <h5 class="mb-1">Bar chart</h5>
+                    <p class="text-muted mb-0">Votes per candidate.</p>
+                </div>
+            </div>
+            <div class="chart-card">
+                <canvas id="resultsBarChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-5">
+        <div class="card-modern p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <h5 class="mb-1">Vote distribution</h5>
+                    <p class="text-muted mb-0">Candidate share of cast votes.</p>
+                </div>
+            </div>
+            <div class="chart-card">
+                <canvas id="resultsPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-controller="Admin" asp-action="Elections" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i> Back to Elections</a>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const resultsLabels = [@string.Join(",", Model.CandidateVoteCounts.Select(c => "\"" + c.CandidateName.Replace("\"", "\\\"") + "\""))];
+        const resultsData = [@string.Join(",", Model.CandidateVoteCounts.Select(c => c.VoteCount.ToString()))];
+
+        const barCtx = document.getElementById('resultsBarChart');
+        const pieCtx = document.getElementById('resultsPieChart');
+
+        if (barCtx) {
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: resultsLabels,
+                    datasets: [{
+                        data: resultsData,
+                        backgroundColor: 'rgba(37,99,235,0.9)',
+                        borderRadius: 10,
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        if (pieCtx) {
+            new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: resultsLabels,
+                    datasets: [{
+                        data: resultsData,
+                        backgroundColor: ['#2563EB', '#10B981', '#F59E0B', '#EF4444', '#64748B'],
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+    </script>
+}

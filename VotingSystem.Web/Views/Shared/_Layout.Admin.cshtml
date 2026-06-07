@@ -1,0 +1,95 @@
+@{
+    Layout = null;
+    var userName = User.Identity?.Name ?? "Administrator";
+    string currentAction = ViewContext.RouteData.Values["Action"]?.ToString() ?? string.Empty;
+    Func<string,string> activeClass = action => currentAction.Equals(action, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Election Command – Secure online voting administration panel." />
+    <title>@ViewData["Title"] - Election Command Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="admin-app">
+        <aside class="admin-sidebar">
+            <!-- Brand -->
+            <div class="sidebar-brand">
+                <div class="brand-mark"><i class="bi bi-ballot-fill"></i></div>
+                <span class="brand-text d-none d-xl-block">Admin</span>
+            </div>
+
+            <!-- Nav -->
+            <nav class="sidebar-nav">
+                <a asp-controller="Admin" asp-action="Dashboard"
+                   class="sidebar-link @(activeClass("Dashboard")!=""?"active":"")" title="Dashboard">
+                    <i class="bi bi-speedometer2"></i>
+                    <span class="sidebar-link-label">Dashboard</span>
+                </a>
+                <a asp-controller="Admin" asp-action="Elections"
+                   class="sidebar-link @(activeClass("Elections")!=""?"active":"")" title="Elections">
+                    <i class="bi bi-calendar-event"></i>
+                    <span class="sidebar-link-label">Elections</span>
+                </a>
+                <a asp-controller="Admin" asp-action="Candidates"
+                   class="sidebar-link @(activeClass("Candidates")!=""?"active":"")" title="Candidates">
+                    <i class="bi bi-people"></i>
+                    <span class="sidebar-link-label">Candidates</span>
+                </a>
+                <a asp-controller="Admin" asp-action="Voters"
+                   class="sidebar-link @(activeClass("Voters")!=""?"active":"")" title="Voters">
+                    <i class="bi bi-person-badge"></i>
+                    <span class="sidebar-link-label">Voters</span>
+                </a>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <i class="bi bi-person-circle fs-5"></i>
+                    <div class="d-none d-xl-block ms-2">
+                        <div class="fw-semibold lh-1" style="font-size:.82rem">@(userName.Length > 22 ? userName[..22] + "…" : userName)</div>
+                        <div style="font-size:.72rem;color:var(--muted)">Administrator</div>
+                    </div>
+                </div>
+                <a class="sidebar-link mt-1" asp-controller="Admin" asp-action="Logout" title="Sign out">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span class="sidebar-link-label">Sign out</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="admin-main">
+            <div class="admin-topbar">
+                <div>
+                    <div class="page-title">@ViewData["Title"]</div>
+                    <div class="admin-breadcrumb">Control Center &bull; @ViewData["Title"]</div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="topbar-date d-none d-md-block">@DateTime.UtcNow.ToString("dddd, MMM dd yyyy")</div>
+                    <div class="live-badge"><span class="pulse-live me-1"></span>Live</div>
+                    <div class="profile-button" title="Notifications">
+                        <i class="bi bi-bell"></i>
+                    </div>
+                </div>
+            </div>
+
+            <section class="fade-in">
+                @RenderBody()
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

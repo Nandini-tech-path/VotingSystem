@@ -1,0 +1,200 @@
+@model VotingSystem.Web.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_Layout.Admin";
+}
+<div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <small class="text-muted">Total Voters</small>
+                    <div class="h2 mt-2">@Model.TotalVoters</div>
+                </div>
+                <span class="icon-wrap bg-primary-soft text-primary"><i class="bi bi-people-fill"></i></span>
+            </div>
+            <p class="text-muted mb-0">Active voters currently registered.</p>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <small class="text-muted">Total Candidates</small>
+                    <div class="h2 mt-2">@Model.TotalCandidates</div>
+                </div>
+                <span class="icon-wrap bg-success-soft text-success"><i class="bi bi-person-badge-fill"></i></span>
+            </div>
+            <p class="text-muted mb-0">Candidates available for current elections.</p>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <small class="text-muted">Total Votes</small>
+                    <div class="h2 mt-2">@Model.TotalVotes</div>
+                </div>
+                <span class="icon-wrap bg-warning-soft text-warning"><i class="bi bi-check2-circle"></i></span>
+            </div>
+            <p class="text-muted mb-0">Ballots counted across the platform.</p>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <small class="text-muted">Election Status</small>
+                    <div class="h2 mt-2">@((Model.ActiveElection != null) ? "Live" : "Paused")</div>
+                </div>
+                <span class="icon-wrap bg-danger-soft text-danger"><i class="bi bi-speedometer2"></i></span>
+            </div>
+            <p class="text-muted mb-0">Current election status overview.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="card-modern p-4 h-100">
+            <div class="d-flex align-items-start justify-content-between mb-4">
+                <div>
+                    <h4 class="mb-1">Live vote tracking</h4>
+                    <p class="text-muted mb-0">Real-time updates for the active election.</p>
+                </div>
+                <div>
+                    <span class="badge badge-primary">@((Model.ActiveElection != null) ? Model.ActiveElection.Status : "No active election")</span>
+                </div>
+            </div>
+            @if (Model.ActiveElection is null)
+            {
+                <div class="alert alert-modern py-4 text-center">No active election is available. Use the elections page to activate one.</div>
+            }
+            else
+            {
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <canvas id="voteChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="chart-card">
+                            <canvas id="candidateDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card-modern p-4 h-100">
+            <h5 class="mb-3">Recent activity</h5>
+            @if (Model.ActiveElection is null)
+            {
+                <div class="alert alert-modern py-4 text-center">Awaiting election activation.</div>
+            }
+            else
+            {
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div>
+                            <strong>@Model.ActiveElection.ElectionName</strong>
+                            <div class="text-muted small">Last updated just now</div>
+                        </div>
+                        <span class="badge badge-success">Live</span>
+                    </div>
+                    <p class="text-muted mb-0">Active from @Model.ActiveElection.StartDate.ToString("MMM d") to @Model.ActiveElection.EndDate.ToString("MMM d").</p>
+                </div>
+                <div>
+                    <h6 class="mb-3">Top candidates</h6>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var candidate in Model.ActiveElection.Candidates.OrderByDescending(c => c.Votes.Count).Take(4))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-0">
+                                <div>
+                                    <div class="fw-semibold">@candidate.CandidateName</div>
+                                    <small class="text-muted">@candidate.Votes.Count votes</small>
+                                </div>
+                                <span class="badge badge-primary">@candidate.Votes.Count</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder().withUrl("/voteHub").build();
+        const activeElectionId = @Model.ActiveElection?.ElectionId ?? 0;
+        const labels = [@Html.Raw(Model.ActiveElection != null ? string.Join(",", Model.ActiveElection.Candidates.Select(c => "\"" + c.CandidateName.Replace("\"", "\\\"") + "\"")) : string.Empty)];
+        const data = [@Html.Raw(Model.ActiveElection != null ? string.Join(",", Model.ActiveElection.Candidates.Select(c => c.Votes.Count.ToString())) : string.Empty)];
+
+        const voteCanvas = document.getElementById('voteChart');
+        const candidateCanvas = document.getElementById('candidateDistributionChart');
+        let voteChart = null;
+        let candidateChart = null;
+
+        if (voteCanvas && labels.length) {
+            voteChart = new Chart(voteCanvas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Vote Count',
+                        data: data,
+                        backgroundColor: labels.map(() => 'rgba(37,99,235,0.85)'),
+                        borderRadius: 8,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            candidateChart = new Chart(candidateCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ['#2563EB', '#10B981', '#F59E0B', '#EF4444', '#64748B'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        connection.on('VoteCountsUpdated', function (electionId, counts) {
+            if (electionId !== activeElectionId) return;
+            counts.forEach(function (item) {
+                const row = document.querySelector(`tr[data-candidate-id="${item.candidateId}"]`);
+                if (row) {
+                    const countCell = row.querySelector('.vote-count');
+                    if (countCell) countCell.textContent = item.voteCount;
+                }
+            });
+            if (voteChart) {
+                voteChart.data.datasets[0].data = counts.map(c => c.voteCount);
+                voteChart.update();
+            }
+            if (candidateChart) {
+                candidateChart.data.datasets[0].data = counts.map(c => c.voteCount);
+                candidateChart.update();
+            }
+        });
+
+        connection.start().catch(err => console.error(err.toString()));
+    </script>
+}

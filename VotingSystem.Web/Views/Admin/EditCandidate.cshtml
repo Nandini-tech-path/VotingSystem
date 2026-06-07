@@ -1,0 +1,25 @@
+@model VotingSystem.Web.ViewModels.CandidateFormViewModel
+@{
+    ViewData["Title"] = "Edit Candidate";
+    Layout = "_Layout.Admin";
+}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card-modern p-3">
+            <div>
+                <h2 class="mb-3">Edit Candidate</h2>
+                <form asp-action="EditCandidate" method="post">
+                    <input asp-for="CandidateId" type="hidden" />
+                    <input asp-for="ElectionId" type="hidden" />
+                    <div class="mb-3">
+                        <label asp-for="CandidateName" class="form-label"></label>
+                        <input asp-for="CandidateName" class="form-control" />
+                        <span asp-validation-for="CandidateName" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i> Update Candidate</button>
+                    <a asp-action="Candidates" asp-route-electionId="@Model.ElectionId" class="btn btn-secondary ms-2"><i class="bi bi-x-lg me-1"></i> Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,122 @@
+@model VotingSystem.Web.ViewModels.ElectionResultsViewModel
+@{
+    ViewData["Title"] = "Election Results";
+    Layout = "_Layout.Voter";
+    var totalVotes = Model.CandidateVoteCounts.Sum(c => c.VoteCount);
+}
+<div class="row gy-4">
+    <div class="col-lg-4">
+        <div class="stat-card p-4">
+            <h5 class="mb-2">Winner</h5>
+            @if (Model.Winner != null)
+            {
+                <div class="fw-bold fs-4">@Model.Winner.CandidateName</div>
+                <p class="text-muted mb-0">Winning candidate</p>
+            }
+            else
+            {
+                <div class="text-muted">No winner available yet.</div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="stat-card p-4">
+            <h5 class="mb-2">Total Votes</h5>
+            <div class="h2">@totalVotes</div>
+            <p class="text-muted mb-0">Votes cast in the election.</p>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="stat-card p-4">
+            <h5 class="mb-2">Vote Share</h5>
+            @if (Model.Winner != null && totalVotes > 0)
+            {
+                <div class="h2">@Math.Round((double)Model.Winner.VoteCount / totalVotes * 100, 1)%</div>
+                <p class="text-muted mb-0">Share of total votes.</p>
+            }
+            else
+            {
+                <div class="text-muted">No vote share available.</div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row gy-4 mt-4">
+    <div class="col-xl-6">
+        <div class="card-modern p-4">
+            <div class="mb-3">
+                <h5 class="mb-1">Vote Breakdown</h5>
+                <p class="text-muted mb-0">Bar chart of candidate votes.</p>
+            </div>
+            <div class="chart-card">
+                <canvas id="voterResultsBar"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6">
+        <div class="card-modern p-4">
+            <div class="mb-3">
+                <h5 class="mb-1">Distribution</h5>
+                <p class="text-muted mb-0">Pie chart of vote percentages.</p>
+            </div>
+            <div class="chart-card">
+                <canvas id="voterResultsPie"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="table-modern p-3">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Candidate</th>
+                        <th class="text-end">Votes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in Model.CandidateVoteCounts)
+                    {
+                        <tr>
+                            <td>@result.CandidateName</td>
+                            <td class="text-end">@result.VoteCount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const labels = [@string.Join(",", Model.CandidateVoteCounts.Select(c => "\"" + c.CandidateName.Replace("\"", "\\\"") + "\""))];
+        const values = [@string.Join(",", Model.CandidateVoteCounts.Select(c => c.VoteCount.ToString()))];
+
+        const bar = document.getElementById('voterResultsBar');
+        const pie = document.getElementById('voterResultsPie');
+
+        if (bar) {
+            new Chart(bar, {
+                type: 'bar',
+                data: { labels, datasets: [{ data: values, backgroundColor: 'rgba(37,99,235,0.85)', borderRadius: 8 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        if (pie) {
+            new Chart(pie, {
+                type: 'pie',
+                data: {
+                    labels,
+                    datasets: [{ data: values, backgroundColor: ['#2563EB', '#10B981', '#F59E0B', '#EF4444', '#64748B'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+    </script>
+}

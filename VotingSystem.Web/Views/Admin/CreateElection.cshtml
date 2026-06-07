@@ -1,0 +1,45 @@
+@model VotingSystem.Web.ViewModels.ElectionFormViewModel
+@{
+    ViewData["Title"] = "Create Election";
+    Layout = "_Layout.Admin";
+}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card-modern p-3">
+            <div>
+                <h2 class="mb-3">Create Election</h2>
+                <form asp-action="CreateElection" method="post">
+                    <div class="mb-3">
+                        <label asp-for="ElectionName" class="form-label"></label>
+                        <input asp-for="ElectionName" class="form-control" />
+                        <span asp-validation-for="ElectionName" class="text-danger"></span>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="StartDate" class="form-label"></label>
+                            <input asp-for="StartDate" class="form-control" type="date" />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="EndDate" class="form-label"></label>
+                            <input asp-for="EndDate" class="form-control" type="date" />
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Status" class="form-label">Status</label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="" disabled>Select status</option>
+                            <option value="Draft">Draft</option>
+                            <option value="Active">Active</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Create Election</button>
+                    <a asp-action="Elections" class="btn btn-secondary ms-2"><i class="bi bi-x-lg me-1"></i> Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

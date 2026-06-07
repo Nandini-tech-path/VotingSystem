@@ -1,0 +1,37 @@
+@model VotingSystem.Web.ViewModels.AdminLoginViewModel
+@{
+    ViewData["Title"] = "Admin Login";
+    Layout = "_Layout";
+}
+<div class="row justify-content-center py-5">
+    <div class="col-lg-5 col-md-7">
+        <div class="card-modern p-4">
+            <div class="text-center mb-4">
+                <div class="display-6 text-primary"><i class="bi bi-shield-lock-fill"></i></div>
+                <h2 class="mb-2">Administrator Login</h2>
+                <p class="text-muted mb-0">Secure admin access to election management.</p>
+            </div>
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Email" />
+                    <label asp-for="Email">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-4">
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Password" />
+                    <label asp-for="Password">Password</label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2"><i class="bi bi-box-arrow-in-right me-2"></i> Login</button>
+            </form>
+            @if (Model.ReturnUrl is not null)
+            {
+                <div class="mt-4 text-center text-muted small">After login, you will be redirected to: <strong>@Model.ReturnUrl</strong></div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

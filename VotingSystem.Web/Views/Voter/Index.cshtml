@@ -1,0 +1,73 @@
+@model VotingSystem.Web.ViewModels.VoterActiveElectionViewModel
+@{
+    ViewData["Title"] = "Active Election";
+    Layout = "_Layout.Voter";
+}
+<div class="row gy-4">
+    <div class="col-12">
+        <div class="card-modern p-4">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+                <div>
+                    <h2 class="mb-2">Active Election</h2>
+                    <p class="text-muted mb-1">Participate in the current voting round and make your voice count.</p>
+                    @if (Model.Election != null)
+                    {
+                        <div class="info-pill"><i class="bi bi-calendar-event"></i> @Model.Election.ElectionName</div>
+                            <div class="mt-3 d-flex flex-wrap gap-2">
+                                <span class="badge-status badge-primary">Starts @Model.Election.StartDate.ToString("MMM d")</span>
+                                <span class="badge-status badge-success">Ends @Model.Election.EndDate.ToString("MMM d")</span>
+                            </div>
+                    }
+                </div>
+                <div class="text-md-end">
+                    @if (Model.AlreadyVoted)
+                    {
+                        <span class="badge-status badge-success">Already Voted</span>
+                    }
+                    else
+                    {
+                        <span class="badge-status badge-warning">Ready to Vote</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Election is null)
+    {
+        <div class="col-12">
+            <div class="alert alert-modern py-4 text-center">No active election available at this moment.</div>
+        </div>
+    }
+    else if (Model.AlreadyVoted)
+    {
+        <div class="col-12">
+            <div class="alert alert-success alert-modern">You have already voted in this election. Thank you for participating.</div>
+        </div>
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="candidate-grid">
+                @foreach (var candidate in (Model.Candidates ?? Enumerable.Empty<VotingSystem.Web.Models.Candidate>()).OrderBy(c => c.CandidateName))
+                {
+                    <div class="card-modern p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div>
+                                    <h5 class="mb-1">@candidate.CandidateName</h5>
+                                    <p class="text-muted mb-1">Candidate for @Model.Election?.ElectionName</p>
+                                </div>
+                                <span class="badge badge-secondary">Nominee</span>
+                            </div>
+                            <p class="text-muted">Position: Lead Representative</p>
+                        </div>
+                        <form asp-action="CastVote" method="post" class="mt-3">
+                            <button type="submit" name="candidateId" value="@candidate.CandidateId" class="btn btn-primary w-100 py-2"><i class="bi bi-hand-thumbs-up me-2"></i> Vote Now</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,75 @@
+@model IEnumerable<VotingSystem.Web.Models.Election>
+@{
+    ViewData["Title"] = "Elections";
+    Layout = "_Layout.Admin";
+}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="mb-1">Election Management</h2>
+        <p class="text-muted mb-0">Review, activate, and manage election cycles from one dashboard.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <input id="electionSearch" type="search" class="form-control input-search" placeholder="Search elections..." />
+        <a class="btn btn-primary" asp-action="CreateElection"><i class="bi bi-plus-lg me-1"></i> New Election</a>
+    </div>
+</div>
+<div class="table-modern p-3">
+    <table class="table table-hover mb-0" id="electionTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var election in Model)
+            {
+                <tr>
+                    <td>@election.ElectionName</td>
+                    <td>@election.StartDate.ToString("yyyy-MM-dd")</td>
+                    <td>@election.EndDate.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        @if (election.Status == "Active")
+                        {
+                            <span class="badge-status badge-success">Active</span>
+                        }
+                        else if (election.Status == "Closed")
+                        {
+                            <span class="badge-status badge-secondary">Closed</span>
+                        }
+                        else
+                        {
+                            <span class="badge-status badge-primary">Draft</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-secondary me-1" asp-action="EditElection" asp-route-id="@election.ElectionId" title="Edit"><i class="bi bi-pencil"></i></a>
+                        <a class="btn btn-sm btn-outline-primary me-1" asp-action="Candidates" asp-route-electionId="@election.ElectionId" title="Candidates"><i class="bi bi-people"></i></a>
+                        <a class="btn btn-sm btn-outline-info me-1" asp-action="ElectionResults" asp-route-id="@election.ElectionId" title="Results"><i class="bi bi-bar-chart-line"></i></a>
+                        <a class="btn btn-sm btn-outline-success me-1" asp-action="ActivateElection" asp-route-id="@election.ElectionId" title="Activate"><i class="bi bi-play-fill"></i></a>
+                        <a class="btn btn-sm btn-outline-danger" asp-action="CloseElection" asp-route-id="@election.ElectionId" title="Close"><i class="bi bi-stop-fill"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('electionSearch');
+            const tableRows = document.querySelectorAll('#electionTable tbody tr');
+            if (!searchInput) return;
+            searchInput.addEventListener('input', function() {
+                const term = this.value.toLowerCase();
+                tableRows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(term) ? '' : 'none';
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,46 @@
+@model VotingSystem.Web.ViewModels.VoterRegistrationViewModel
+@{
+    ViewData["Title"] = "Voter Registration";
+    Layout = "_Layout";
+}
+<div class="row justify-content-center py-5">
+    <div class="col-lg-5 col-md-7">
+        <div class="card-modern p-4">
+            <div class="mb-4 text-center">
+                <div class="display-6 text-primary"><i class="bi bi-person-plus"></i></div>
+                <h2 class="mb-1">Register as a Voter</h2>
+                <p class="text-muted mb-0">Create your voter account and join the next election.</p>
+            </div>
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Name" class="form-control" placeholder="Name" />
+                    <label asp-for="Name">Full Name</label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Email" />
+                    <label asp-for="Email">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Password" />
+                    <label asp-for="Password">Password</label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-4">
+                    <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Confirm Password" />
+                    <label asp-for="ConfirmPassword">Confirm Password</label>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 mb-3"><i class="bi bi-person-plus me-2"></i> Register</button>
+                <div class="text-center">
+                    <a asp-action="Login" class="text-decoration-none">Already registered? Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

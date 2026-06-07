@@ -1,0 +1,21 @@
+@model VotingSystem.Web.ViewModels.VoteConfirmationViewModel
+@{
+    ViewData["Title"] = "Vote Confirmation";
+    Layout = "_Layout.Voter";
+}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card-modern p-5 text-center">
+            <div class="mb-4">
+                <div class="display-6 text-success"><i class="bi bi-check-circle-fill"></i></div>
+                <h2 class="mb-2">Vote Confirmed</h2>
+            </div>
+            <p class="lead mb-3">Your vote for <strong>@Model.CandidateName</strong> in <strong>@Model.ElectionName</strong> has been successfully recorded.</p>
+            <p class="text-muted mb-4"><strong>Vote date:</strong> @Model.VoteDate.ToLocalTime():g</p>
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                <a class="btn btn-primary px-4" asp-action="Index"><i class="bi bi-arrow-left-circle me-2"></i> Back to Election</a>
+                <a class="btn btn-outline-secondary px-4" asp-action="Results"><i class="bi bi-bar-chart me-2"></i> View Results</a>
+            </div>
+        </div>
+    </div>
+</div>

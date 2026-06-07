@@ -1,0 +1,16 @@
+@{
+    ViewData["Title"] = "Access Denied";
+    Layout = "_Layout";
+}
+<div class="row justify-content-center py-5">
+    <div class="col-md-8">
+        <div class="card-modern p-5 text-center">
+            <div class="mb-3">
+                <span class="display-5 text-warning"><i class="bi bi-shield-exclamation"></i></span>
+            </div>
+            <h3 class="mb-3">Access Denied</h3>
+            <p class="text-muted mb-4">You do not have permission to view this page. Please log in with the correct account to continue.</p>
+            <a class="btn btn-primary" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door me-1"></i> Return Home</a>
+        </div>
+    </div>
+</div>

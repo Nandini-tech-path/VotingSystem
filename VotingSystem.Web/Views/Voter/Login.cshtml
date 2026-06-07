@@ -1,0 +1,37 @@
+@model VotingSystem.Web.ViewModels.VoterLoginViewModel
+@{
+    ViewData["Title"] = "Voter Login";
+    Layout = "_Layout";
+}
+<div class="row justify-content-center py-5">
+    <div class="col-lg-5 col-md-7">
+        <div class="card-modern p-4">
+            <div class="mb-4 text-center">
+                <h2 class="mb-1">Voter Login</h2>
+                <p class="text-muted mb-0">Access your ballot securely and cast your vote.</p>
+            </div>
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Email" />
+                    <label asp-for="Email">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-4">
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Password" />
+                    <label asp-for="Password">Password</label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 mb-3"><i class="bi bi-box-arrow-in-right me-2"></i> Login</button>
+                <div class="d-flex justify-content-between gap-2 flex-wrap">
+                    <a class="btn btn-outline-secondary btn-sm" asp-controller="Voter" asp-action="Register">Register</a>
+                    <a class="btn btn-link btn-sm text-muted" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door me-1"></i> Home</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

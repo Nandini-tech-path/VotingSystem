@@ -1,0 +1,119 @@
+@model VotingSystem.Web.ViewModels.HomeIndexViewModel
+@{
+    ViewData["Title"] = "Secure Online Voting System";
+}
+<section class="hero-panel mb-5">
+    <div class="row align-items-center gy-5">
+        <div class="col-lg-6 hero-content">
+            <span class="badge-accent mb-3">Professional Election Platform</span>
+            <h1 class="display-5 fw-bold mb-3">Secure Online Voting System</h1>
+            <p class="lead text-muted mb-4">A premium digital election portal built for universities, government institutions, and large organizations. Manage ballots, monitor live vote counts, and deliver transparent election results.</p>
+            <div class="d-flex flex-wrap gap-3">
+                <a class="btn btn-primary btn-lg" asp-controller="Voter" asp-action="Login"><i class="bi bi-person-fill me-2"></i> Voter Login</a>
+                <a class="btn btn-outline-gold btn-lg" asp-controller="Voter" asp-action="Register"><i class="bi bi-person-plus me-2"></i> Register</a>
+                <a class="btn btn-outline-light btn-lg" asp-controller="Admin" asp-action="Login"><i class="bi bi-shield-lock-fill me-2"></i> Admin Login</a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="hero-banner shadow-lg">
+                <div class="text-center mb-4">
+                    <div class="icon-shell mx-auto mb-4"><i class="bi bi-ballot fs-1"></i></div>
+                    <h3 class="mb-2">Immersive Voting Experience</h3>
+                    <p class="text-muted mb-0">Elegant interface, secure workflows, and award-grade visual design.</p>
+                </div>
+                <div class="row g-3 mt-4">
+                    <div class="col-6">
+                        <div class="stats-card p-4">
+                            <h3 class="mb-1">@((Model.ActiveElection != null) ? 1 : 0)</h3>
+                            <p class="mb-0 text-muted">Live Election</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stats-card p-4">
+                            <h3 class="mb-1">150+</h3>
+                            <p class="mb-0 text-muted">Trusted Institutions</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stats-card p-4">
+                            <h3 class="mb-1">24/7</h3>
+                            <p class="mb-0 text-muted">Security Monitoring</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stats-card p-4">
+                            <h3 class="mb-1">99.9%</h3>
+                            <p class="mb-0 text-muted">Uptime Assurance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="feature-box p-4">
+                <div class="icon-wrap mb-3"><i class="bi bi-people-fill"></i></div>
+                <h5>Role-Based Voting</h5>
+                <p class="mb-0 text-muted">Separate voter and administrator workflows with secure, audited access controls.</p>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="feature-box p-4">
+                <div class="icon-wrap mb-3"><i class="bi bi-bar-chart-line-fill"></i></div>
+                <h5>Live Results</h5>
+                <p class="mb-0 text-muted">Track ballots as they are counted, with charts and analytics updated in real time.</p>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="feature-box p-4">
+                <div class="icon-wrap mb-3"><i class="bi bi-shield-lock-fill"></i></div>
+                <h5>Secure Ballots</h5>
+                <p class="mb-0 text-muted">Encrypt and protect every vote with audit-ready processes and polished ballot design.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-6">
+            <div class="card-panel p-5">
+                <h2 class="section-title">How Voting Works</h2>
+                <div class="row g-3 mt-4">
+                    <div class="col-12">
+                        <div class="step-card p-4">
+                            <div class="d-flex align-items-center gap-3 mb-3"><span class="icon-wrap"><i class="bi bi-shield-check"></i></span><h5 class="mb-0">Secure Voter Access</h5></div>
+                            <p class="mb-0 text-muted">Voters log in through a clean, professional ballot portal with authentication and session protection.</p>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="step-card p-4">
+                            <div class="d-flex align-items-center gap-3 mb-3"><span class="icon-wrap"><i class="bi bi-card-checklist"></i></span><h5 class="mb-0">Cast a Digital Ballot</h5></div>
+                            <p class="mb-0 text-muted">Choose candidates from a crisp ballot layout and confirm your vote with a secure modal workflow.</p>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="step-card p-4">
+                            <div class="d-flex align-items-center gap-3 mb-3"><span class="icon-wrap"><i class="bi bi-graph-up"></i></span><h5 class="mb-0">View Verified Results</h5></div>
+                            <p class="mb-0 text-muted">Administrators track live vote totals and results are displayed with professional charts and ranking badges.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="security-card p-5">
+                <h2 class="section-title">Security Highlights</h2>
+                <ul class="list-unstyled mt-4 text-muted">
+                    <li class="mb-3"><i class="bi bi-check2-circle text-gold me-2"></i>Encrypted ballot transport and audit-ready election tracking.</li>
+                    <li class="mb-3"><i class="bi bi-check2-circle text-gold me-2"></i>Role separation for administrators and voters with clear access controls.</li>
+                    <li class="mb-3"><i class="bi bi-check2-circle text-gold me-2"></i>Responsive, polished experience for every device and election workflow.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
