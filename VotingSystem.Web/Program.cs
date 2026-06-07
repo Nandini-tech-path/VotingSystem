@@ -100,8 +100,20 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<VotingDbContext>();
-    db.Database.Migrate();
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        var db = services.GetRequiredService<VotingDbContext>();
+        logger.LogInformation("Attempting to apply database migrations...");
+        db.Database.Migrate();
+        logger.LogInformation("Database migrations applied successfully.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while migrating the database. This is typically caused by incorrect SQL connection strings or IP firewall restrictions.");
+        // We catch the error instead of crashing, so the app still starts and you can see the log.
+    }
 }
 
 if (!app.Environment.IsDevelopment())
